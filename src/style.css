@@ -1,0 +1,75 @@
+* {
+      font-family: "Lexend", sans-serif;
+      font-optical-sizing: auto;
+      font-style: normal;
+}
+
+a {
+    color: #1B559A;
+}
+
+#app-container {
+    padding: 10px;
+}
+
+.tasks-container {
+    max-width: 340px;
+}
+
+.tasks-container .list-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.tasks-container .list-header .add-task {
+    cursor: pointer;
+}
+
+.tasks-container .sort-by {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.tasks {
+    margin-top: 8px;
+}
+
+.tasks .check-box {
+    width: 16px;
+    height: 16px;
+    background: black;
+    color: white;
+    margin-top: 2px;
+    margin-right: 16px;
+    margin-left: 4px;
+}
+
+.tasks .check-box:hover {
+    background: rgba(27,85,154,1);
+}
+
+.tasks .check-box > span {
+    font-size: 16px;
+    display: none;
+}
+
+.tasks .check-box.checked > span {
+    display: block;
+}
+
+.tasks .task-container {
+    display: flex;
+    padding: 12px;
+    border: 1px solid black;
+    margin-bottom: 15px;
+}
+
+.tasks .task-container:hover {
+    //color: rgba(27,85,154,1);
+    //border: 1px solid rgba(27,85,154,1);
+    background: rgba(27,85,154,0.03);
+    cursor: pointer;
+}

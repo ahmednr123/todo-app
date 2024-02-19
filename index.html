@@ -2,11 +2,44 @@
 <html>
 <head>
     <title>Todo List</title>
-    <link rel="stylesheet" href="./style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 <body>
     <div id="app-container">
+        <div class="tasks-container">
+            <div class="list-header">
+                <div class="header-title">Tasks</div>
+                <div class="add-task">+</div>
+            </div>
+            <div class="sort-by">
+                <div>Sort:</div>
+                <div>
+                    <a href="#">Priority</a>
+                    <a href="#">End Date</a>
+                </div>
+            </div>
+            <div class="tasks">
+                <div class="task-container">
+                    <div class="check-box">
+                        <span class="material-symbols-outlined">done</span>
+                    </div>
+                    <div class="task-title">
+                        This is my first task
+                    </div>
+                </div>
+                <div class="task-container">
+                    <div class="check-box checked">
+                        <span class="material-symbols-outlined">done</span>
+                    </div>
+                    <div class="task-title">
+                        This is my second task. It is a little longer than the previous one.
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script src="./script.js"></script>
 </body>
 </html>
