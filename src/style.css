@@ -73,3 +73,104 @@ a {
     background: rgba(27,85,154,0.03);
     cursor: pointer;
 }
+
+/* === */
+
+#backdrop {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    backdrop-filter: blur(10px);
+    background: rgba(0,0,0,0.5);
+}
+
+#popup {
+    position: absolute;
+    width: 500px;
+    background: white;
+    padding: 20px;
+    margin-top: 40px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    border: 1px solid black;
+}
+
+#popup .header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+#popup .header .close span {
+    font-size: 20px;
+}
+
+#popup section {
+    display: flex;
+    flex-direction: column;
+}
+
+#popup section label {
+    font-size: 12px;
+}
+
+#popup input[type='text'],
+#popup input[type='date'],
+textarea, select
+{
+    padding: 14px 20px;
+    border: 1px solid black;
+    font-size: 14px;
+    background: white;
+}
+
+.form {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.form.two-section > section {
+    width: calc(50% - 8px);
+}
+
+.form.one-section > section {
+    width: 100%;
+}
+
+#popup .footer {
+    margin-top: 50px;
+}
+
+.form button {
+    border: 0px;
+    border-radius: 0px;
+    padding: 10px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.form button:hover {
+    opacity: 0.8;
+}
+
+.form button.text {
+    padding-left: 12px;
+    padding-right: 12px;
+}
+
+.form button.dark {
+    color: white;
+    background: black;
+}
+
+.form button.delete {
+    color: #b51c1c;
+    background: #ffe7e7;
+}
+
+.form button.delete > span {
+    font-size: 18px;
+}
