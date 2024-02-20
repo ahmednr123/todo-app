@@ -10,6 +10,7 @@ import './style.css';
 //    console.dir(evt.relatedTarget);
 //});
 
+//Add moveTo container ref as well, to get list name that the task has to move to.
 const TaskState = {
     ref: null,
 };
@@ -21,30 +22,47 @@ progressList.addEventListener('mouseenter', function () {
         moveHereElem.style.display = "flex";
     }
 });
-
 progressList.addEventListener('mouseleave', function () {
     const moveHereElem = progressList.getElementsByClassName("move-here")[0] as HTMLElement;
     moveHereElem.style.display = "none";
 });
 
-const taskElement = document.getElementById("task-moveable")
-taskElement.addEventListener("mousedown", function (evt) {
-    if (evt.button != 0)
-        return;
-
-    TaskState.ref = taskElement;
-    const computedStyle = getComputedStyle(TaskState.ref);
-    const width = parseInt(computedStyle.width);
-    const height = parseInt(computedStyle.height);
-
-    console.log(`width: ${width} ${height}`);
-
-    TaskState.ref.style.position = "fixed";
-    TaskState.ref.style.width = width + 'px';
-    TaskState.ref.style.height = height + 'px';
-    TaskState.ref.style.zIndex = '30';
-    console.log("mousedown");
+const doneList = document.getElementById("done-list");
+doneList.addEventListener('mouseenter', function () {
+    if (TaskState.ref) {
+        const moveHereElem = doneList.getElementsByClassName("move-here")[0] as HTMLElement;
+        moveHereElem.style.display = "flex";
+    }
 });
+doneList.addEventListener('mouseleave', function () {
+    const moveHereElem = doneList.getElementsByClassName("move-here")[0] as HTMLElement;
+    moveHereElem.style.display = "none";
+});
+
+
+const taskElements = document.getElementsByClassName("task-container");
+for (let taskElement of taskElements) {
+    (taskElement as HTMLElement).addEventListener("mousedown", function (evt) {
+        if (evt.button != 0)
+            return;
+
+        TaskState.ref = taskElement;
+        const computedStyle = getComputedStyle(TaskState.ref);
+        const width = parseInt(computedStyle.width);
+        const height = parseInt(computedStyle.height);
+
+        console.log(`width: ${width} ${height}`);
+
+        TaskState.ref.style.position = "fixed";
+        TaskState.ref.style.width = width + 'px';
+        TaskState.ref.style.height = height + 'px';
+        TaskState.ref.style.zIndex = '30';
+
+        document.body.style.cursor = "move";
+
+        console.log("mousedown");
+    });
+}
 
 document.addEventListener("mousemove", function (evt) {
     if (TaskState.ref) {
@@ -56,6 +74,8 @@ document.addEventListener("mousemove", function (evt) {
 
 document.addEventListener("mouseup", function () {
     if (TaskState.ref) {
+        document.body.style.cursor = "auto";
+
         TaskState.ref.style.position = "relative";
         TaskState.ref.style.width = 'auto';
         TaskState.ref.style.height = 'auto';
