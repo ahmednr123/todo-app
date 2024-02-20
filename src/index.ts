@@ -2,6 +2,71 @@ import { v4 as uuid } from 'uuid';
 
 import './style.css';
 
+//document.addEventListener('click', (evt) => {
+//    evt.preventDefault();
+//    console.log("target:");
+//    console.dir(evt.target);
+//    console.log("related target:");
+//    console.dir(evt.relatedTarget);
+//});
+
+const TaskState = {
+    ref: null,
+};
+
+const progressList = document.getElementById("progress-list");
+progressList.addEventListener('mouseenter', function () {
+    if (TaskState.ref) {
+        const moveHereElem = progressList.getElementsByClassName("move-here")[0] as HTMLElement;
+        moveHereElem.style.display = "flex";
+    }
+});
+
+progressList.addEventListener('mouseleave', function () {
+    const moveHereElem = progressList.getElementsByClassName("move-here")[0] as HTMLElement;
+    moveHereElem.style.display = "none";
+});
+
+const taskElement = document.getElementById("task-moveable")
+taskElement.addEventListener("mousedown", function (evt) {
+    if (evt.button != 0)
+        return;
+
+    TaskState.ref = taskElement;
+    const computedStyle = getComputedStyle(TaskState.ref);
+    const width = parseInt(computedStyle.width);
+    const height = parseInt(computedStyle.height);
+
+    console.log(`width: ${width} ${height}`);
+
+    TaskState.ref.style.position = "fixed";
+    TaskState.ref.style.width = width + 'px';
+    TaskState.ref.style.height = height + 'px';
+    TaskState.ref.style.zIndex = '30';
+    console.log("mousedown");
+});
+
+document.addEventListener("mousemove", function (evt) {
+    if (TaskState.ref) {
+        evt.preventDefault();
+        TaskState.ref.style.top = `${evt.clientY+1}px`;
+        TaskState.ref.style.left = `${evt.clientX+1}px`;
+    }
+});
+
+document.addEventListener("mouseup", function () {
+    if (TaskState.ref) {
+        TaskState.ref.style.position = "relative";
+        TaskState.ref.style.width = 'auto';
+        TaskState.ref.style.height = 'auto';
+        TaskState.ref.style.top = 'auto';
+        TaskState.ref.style.left = 'auto';
+        TaskState.ref.style.zIndex = '0';
+        TaskState.ref = null;
+        console.log(`mouseup`);
+    }
+});
+
 enum TaskPriority {
     NONE = 0,
     HIGH = 3,
@@ -56,6 +121,13 @@ class TasksHandler {
         if (index != -1) {
             this.tasks.splice(index);
         }
+    }
+
+    public getTask (id: String) {
+        const task = this.tasks.find(t => t.id == id);
+        if (!task)
+            throw new Error("Task not found");
+        return task;
     }
 
     public updateTask (id: String, config: TaskConfig) {

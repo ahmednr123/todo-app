@@ -18,6 +18,7 @@ a {
 
 #app-container > .tasks-container {
     width: calc(33.33% - 30px);
+    position: relative;
 }
 
 .tasks-container {
@@ -73,13 +74,65 @@ a {
     padding: 12px;
     border: 1px solid black;
     margin-bottom: 15px;
+    position: relative;
+    background: white;
+}
+
+.high::before,
+.medium::before,
+.low::before
+{
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 7px;
+    height: 100%;
+}
+
+.high::before {
+    background: #FF8484;
+}
+
+.medium::before {
+    background: #FFCE84;
+}
+
+.low::before {
+    background: #ABFF84;
 }
 
 .tasks .task-container:hover {
     //color: rgba(27,85,154,1);
     //border: 1px solid rgba(27,85,154,1);
-    background: rgba(27,85,154,0.03);
+    background: rgb(248,250,252);
     cursor: pointer;
+}
+
+.no-task-here {
+    color: #545454;
+    background: #F0F0F0;
+    padding: 25px;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 42px;
+}
+
+.move-here {
+    position: absolute;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(2px);
+    width: calc(100% + 30px);
+    height: calc(100% + 20px);
+    border-radius: 8px;
+    top: -15px;
+    left: -15px;
+    z-index: 15;
+    color: white;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
 }
 
 /* === */
