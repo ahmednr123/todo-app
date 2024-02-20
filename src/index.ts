@@ -28,13 +28,57 @@ enum SortOrder {
     ASC, DESC
 }
 
-//Better to have ParentTasksArray in a class and restrict
-//illegal modifications. Also move TaskOperations to here
-const ParentTasksArray: Array<Task> = [];
+class TasksHandler {
+    private tasks: Array<Task> = [];
+
+    public getTasks () {
+        return this.tasks.slice();
+    }
+
+    public addTask (list_name: String, config: TaskConfig) {
+        if (!TaskList.exists(list_name)) {
+            throw new Error("TaskList doesn't exist.");
+        }
+
+        this.tasks.push({
+            id: uuid(),
+            list_name: list_name,
+            title: config.title || "",
+            description: config.description || "",
+            end_date: config.end_date || (new Date()),
+            priority: config.priority || TaskPriority.NONE,
+            checked: config.checked || false
+        });
+    }
+
+    public removeTask (id: String) {
+        const index = this.tasks.findIndex(t => t.id == id);
+        if (index != -1) {
+            this.tasks.splice(index);
+        }
+    }
+
+    public updateTask (id: String, config: TaskConfig) {
+        const task = this.tasks.find(t => t.id == id);
+
+        task.title = config.title || task.title;
+        task.description = config.description || task.description;
+        task.end_date = config.end_date || task.end_date;
+        task.priority = config.priority || task.priority;
+        task.checked = config.checked || task.checked;
+    }
+
+    public moveTask (id: String, list_name: String) {
+        if (!TaskList.exists(list_name)) {
+            throw new Error("TaskList doesn't exist.");
+        }
+
+        const task = this.tasks.find(t => t.id == id);
+        task.list_name = list_name;
+    }
+}
 
 type TaskConfig = {
-    list_name: String,
-
     title?: String,
     description?: String,
     end_date?: Date,
@@ -42,31 +86,13 @@ type TaskConfig = {
     checked?: Boolean
 };
 
-class TaskOperations {
-    public static new (config: TaskConfig): Task {
-        if (!TaskList.exists(config.list_name)) {
-            throw new Error("TaskList doesn't exist.");
-        }
-
-        return {
-            id: uuid(),
-            list_name: config.list_name,
-            title: config.title || "",
-            description: config.description || "",
-            end_date: config.end_date || (new Date()),
-            priority: config.priority || TaskPriority.NONE,
-            checked: config.checked || false
-        }
-    }
-}
-
 class TaskList {
     name: String;
     sort_order: SortOrder;
     sort_by: SortBy;
 
     private static task_lists: Set<TaskList> = new Set();
-    public static parent_tasks: Array<Task> = null;
+    public static tasks_handler: TasksHandler = null;
 
     public static exists (name: String) {
         for (let t of TaskList.task_lists) {
@@ -78,8 +104,8 @@ class TaskList {
     }
 
     public constructor (name: String) {
-        if (!TaskList.parent_tasks)
-            throw new Error("Parent task list not assigned to TaskList");
+        if (!TaskList.tasks_handler)
+            throw new Error("Tasks handler not assigned to TaskList");
 
         this.name = name;
         this.sort_order = SortOrder.ASC;
@@ -111,14 +137,14 @@ class TaskList {
     }
 
     public getTasks (): Array<Task> {
-        return TaskList.parent_tasks
-        .filter(o => o.list_name == this.name)
-        .toSorted(
-            this.getComparator(
-                this.sort_by,
-                this.sort_order
-            )
-        );
+        return TaskList.tasks_handler.getTasks()
+                .filter(o => o.list_name == this.name)
+                .toSorted(
+                    this.getComparator(
+                        this.sort_by,
+                        this.sort_order
+                    )
+                );
     }
 
     public updateSortBy (sort_by: SortBy) {
@@ -134,39 +160,43 @@ class TaskList {
     }
 }
 
-const task1: Task =
-TaskOperations.new({
+const rootTaskHandler = new TasksHandler();
+
+TaskList.tasks_handler = rootTaskHandler;
+const todo_task_list = new TaskList('todo');
+const progress_task_list = new TaskList('progress');
+const done_task_list = new TaskList('done');
+
+rootTaskHandler.addTask('todo', {
     title: "Title 1",
     end_date: new Date(),
     priority: TaskPriority.HIGH,
-    list_name: 'todo',
     checked: false
 });
 
-const task2: Task =
-TaskOperations.new({
+rootTaskHandler.addTask('todo', {
     title: "Title 2",
     end_date: new Date(),
     priority: TaskPriority.HIGH,
-    list_name: 'todo',
     checked: false
 });
 
-const task3: Task =
-TaskOperations.new({
+rootTaskHandler.addTask('todo', {
     title: "Title 3",
     end_date: new Date(),
-    priority: TaskPriority.HIGH,
-    list_name: 'todo',
+    priority: TaskPriority.LOW,
     checked: false
 });
 
-TaskList.parent_tasks = ParentTasksArray;
-const todo_task_list = new TaskList('todo');
-
-ParentTasksArray.push(task2);
-ParentTasksArray.push(task1);
-ParentTasksArray.push(task3);
+rootTaskHandler.addTask('progress', {
+    title: "Title 4",
+    end_date: new Date(),
+    priority: TaskPriority.MEDIUM,
+    checked: false
+});
 
 console.log("Tasks: ");
 console.dir(todo_task_list.getTasks());
+
+console.log("Root Tasks: ");
+console.dir(rootTaskHandler.getTasks());
