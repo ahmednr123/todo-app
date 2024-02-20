@@ -10,6 +10,14 @@ a {
 
 #app-container {
     padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 65%;
+    margin: 40px auto;
+}
+
+#app-container > .tasks-container {
+    width: calc(33.33% - 30px);
 }
 
 .tasks-container {
@@ -84,6 +92,7 @@ a {
     bottom: 0px;
     backdrop-filter: blur(10px);
     background: rgba(0,0,0,0.5);
+    display: none;
 }
 
 #popup {
@@ -95,6 +104,7 @@ a {
     margin-left: 50%;
     transform: translateX(-50%);
     border: 1px solid black;
+    display: none;
 }
 
 #popup .header {
