@@ -54,6 +54,7 @@ a {
     margin-top: 2px;
     margin-right: 16px;
     margin-left: 4px;
+    flex-shrink: 0;
 }
 
 .tasks .check-box:hover {
@@ -116,6 +117,7 @@ a {
     font-size: 14px;
     text-align: center;
     margin-top: 42px;
+    display: none;
 }
 
 .move-here {
@@ -135,6 +137,10 @@ a {
     font-weight: 600;
 }
 
+.sort-order-arrow {
+    cursor: pointer;
+}
+
 /* === */
 
 #backdrop {
@@ -146,6 +152,7 @@ a {
     backdrop-filter: blur(10px);
     background: rgba(0,0,0,0.5);
     display: none;
+    z-index: 100;
 }
 
 #popup {
@@ -158,6 +165,7 @@ a {
     transform: translateX(-50%);
     border: 1px solid black;
     display: none;
+    z-index: 150;
 }
 
 #popup .header {
@@ -168,6 +176,7 @@ a {
 
 #popup .header .close span {
     font-size: 20px;
+    cursor: pointer;
 }
 
 #popup section {
@@ -232,8 +241,14 @@ textarea, select
 .form button.delete {
     color: #b51c1c;
     background: #ffe7e7;
+    margin-right: 20px;
 }
 
 .form button.delete > span {
     font-size: 18px;
+}
+
+.form .error {
+    font-size: 12px;
+    color: red;
 }

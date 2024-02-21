@@ -1,7 +1,7 @@
 <!DOCTYPE>
 <html>
 <head>
-    <title>Todo List</title>
+    <title>Todo App</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
@@ -16,26 +16,16 @@
                 <span class="material-symbols-outlined">close</span>
             </div>
         </div>
-        <div class="form two-section">
-            <section>
-                <label>Title</label>
-                <input type="text" />
-            </section>
-            <section>
-                <label>End Date</label>
-                <input type="date" />
-            </section>
-        </div>
         <div class="form one-section">
             <section>
-                <label>Description</label>
-                <textarea rows="5"></textarea>
+                <label>Title</label>
+                <input type="text" id="title" />
             </section>
         </div>
         <div class="form two-section">
             <section>
                 <label>Priority</label>
-                <select>
+                <select id="priority">
                     <option value="none">None</option>
                     <option value="high"><span></span>High</option>
                     <option value="medium">Medium</option>
@@ -43,25 +33,38 @@
                 </select>
             </section>
             <section>
+                <label>End Date</label>
+                <input type="date" id="end_date" />
+            </section>
+        </div>
+        <div class="form one-section">
+            <section>
+                <label>Description</label>
+                <textarea rows="5" id="desc" ></textarea>
+            </section>
+        </div>
+        <div class="form one-section">
+            <section>
                 <label>In List</label>
-                <select>
-                    <option>To do</option>
-                    <option>In Progress</option>
-                    <option>Done</option>
+                <select id="list_name">
+                    <option value="todo">To do</option>
+                    <option value="progress">In Progress</option>
+                    <option value="done">Done</option>
                 </select>
             </section>
         </div>
         <div class="form two-section footer">
-            <div>
+            <div style="display: flex;align-items:center;">
                 <button class="delete">
                     <span class="material-symbols-outlined">
                         delete
                     </span>
                 </button>
+                <span class="error">This is an error</span>
             </div>
             <div>
-                <button>Cancel</button>
-                <button class="dark text">Save</button>
+                <button class="cancel" style="margin-right:8px;">Cancel</button>
+                <button class="dark text save">Save</button>
             </div>
         </div>
     </div>
