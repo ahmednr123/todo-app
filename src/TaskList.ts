@@ -1,4 +1,5 @@
-import { SortBy, SortOrder, Task, TasksHandler } from "./Task";
+import { SortBy, SortOrder, Task } from "./Task";
+import { TasksHandler } from "./TaskHandler";
 
 export class TaskList {
     name: string;

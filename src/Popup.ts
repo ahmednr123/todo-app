@@ -1,5 +1,6 @@
-import { RootTaskHandler, stringToTaskPriority, taskPriorityToString } from "./Task";
+import { formatDateToHTMLInputDate, stringToTaskPriority, taskPriorityToString } from "./Utils";
 import { TheDOMGuy } from "./TheDOMGuy";
+import { RootTaskHandler } from "./AppConfig";
 
 export enum PopupType {
     NEW_TASK,
@@ -143,16 +144,4 @@ export class Popup {
         error_span.innerHTML = msg;
         error_span.style.display = "inline";
     }
-}
-
-//ChatGPT
-function formatDateToHTMLInputDate(date: Date) {
-    // Get year, month, and day components from the date object
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const day = String(date.getDate()).padStart(2, '0');
-
-    // Construct the HTML input date string in the format yyyy-mm-dd
-    const htmlInputDate = `${year}-${month}-${day}`;
-    return htmlInputDate;
 }
