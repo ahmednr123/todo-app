@@ -7,11 +7,11 @@ View it live here: [Netlify](https://noor-todo-app.netlify.app)
 ![Todo App](screenshots/main.png)
 
 ## Setting up
-    - Install dependencies
+- Install dependencies
         `npm install`
-    - Live view
+- Live view
         `npm start`
-    - To build
+- To build
         `npm run build`
 
 ## Screenshots
