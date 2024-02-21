@@ -13,6 +13,7 @@ import './style.css';
 //Add moveTo container ref as well, to get list name that the task has to move to.
 const TaskState = {
     ref: null,
+    initialized: false
 };
 
 const progressList = document.getElementById("progress-list");
@@ -39,19 +40,25 @@ doneList.addEventListener('mouseleave', function () {
     moveHereElem.style.display = "none";
 });
 
-
 const taskElements = document.getElementsByClassName("task-container");
 for (let taskElement of taskElements) {
+    (taskElement as HTMLElement).addEventListener("click", function () {
+        alert("done?");
+    });
     (taskElement as HTMLElement).addEventListener("mousedown", function (evt) {
         if (evt.button != 0)
             return;
 
         TaskState.ref = taskElement;
+        TaskState.initialized = false;
+    });
+}
+
+document.addEventListener("mousemove", function (evt) {
+    if (TaskState.ref && !TaskState.initialized) {
         const computedStyle = getComputedStyle(TaskState.ref);
         const width = parseInt(computedStyle.width);
         const height = parseInt(computedStyle.height);
-
-        console.log(`width: ${width} ${height}`);
 
         TaskState.ref.style.position = "fixed";
         TaskState.ref.style.width = width + 'px';
@@ -59,12 +66,9 @@ for (let taskElement of taskElements) {
         TaskState.ref.style.zIndex = '30';
 
         document.body.style.cursor = "move";
+        TaskState.initialized = true;
+    }
 
-        console.log("mousedown");
-    });
-}
-
-document.addEventListener("mousemove", function (evt) {
     if (TaskState.ref) {
         evt.preventDefault();
         TaskState.ref.style.top = `${evt.clientY+1}px`;
@@ -82,45 +86,46 @@ document.addEventListener("mouseup", function () {
         TaskState.ref.style.top = 'auto';
         TaskState.ref.style.left = 'auto';
         TaskState.ref.style.zIndex = '0';
+
+        TaskState.initialized = false;
         TaskState.ref = null;
-        console.log(`mouseup`);
     }
 });
 
-enum TaskPriority {
+export enum TaskPriority {
     NONE = 0,
     HIGH = 3,
     MEDIUM = 2,
     LOW = 1
 }
 
-type Task = {
-    id: String,
-    title: String,
-    list_name: String,
-    description: String,
+export type Task = {
+    id: string,
+    title: string,
+    list_name: string,
+    description: string,
     end_date: Date,
     priority: TaskPriority,
     checked: Boolean,
 }
 
-enum SortBy {
+export enum SortBy {
     PRIORITY,
     END_DATE
 }
 
-enum SortOrder {
+export enum SortOrder {
     ASC, DESC
 }
 
-class TasksHandler {
+export class TasksHandler {
     private tasks: Array<Task> = [];
 
     public getTasks () {
         return this.tasks.slice();
     }
 
-    public addTask (list_name: String, config: TaskConfig) {
+    public addTask (list_name: string, config: TaskConfig) {
         if (!TaskList.exists(list_name)) {
             throw new Error("TaskList doesn't exist.");
         }
@@ -136,21 +141,21 @@ class TasksHandler {
         });
     }
 
-    public removeTask (id: String) {
+    public removeTask (id: string) {
         const index = this.tasks.findIndex(t => t.id == id);
         if (index != -1) {
             this.tasks.splice(index);
         }
     }
 
-    public getTask (id: String) {
+    public getTask (id: string) {
         const task = this.tasks.find(t => t.id == id);
         if (!task)
             throw new Error("Task not found");
         return task;
     }
 
-    public updateTask (id: String, config: TaskConfig) {
+    public updateTask (id: string, config: TaskConfig) {
         const task = this.tasks.find(t => t.id == id);
 
         task.title = config.title || task.title;
@@ -160,7 +165,7 @@ class TasksHandler {
         task.checked = config.checked || task.checked;
     }
 
-    public moveTask (id: String, list_name: String) {
+    public moveTask (id: string, list_name: string) {
         if (!TaskList.exists(list_name)) {
             throw new Error("TaskList doesn't exist.");
         }
@@ -170,23 +175,24 @@ class TasksHandler {
     }
 }
 
-type TaskConfig = {
-    title?: String,
-    description?: String,
+export type TaskConfig = {
+    title?: string,
+    description?: string,
     end_date?: Date,
     priority?: TaskPriority,
     checked?: Boolean
 };
 
-class TaskList {
-    name: String;
+export class TaskList {
+    name: string;
+    proper_name: string;
     sort_order: SortOrder;
     sort_by: SortBy;
 
     private static task_lists: Set<TaskList> = new Set();
     public static tasks_handler: TasksHandler = null;
 
-    public static exists (name: String) {
+    public static exists (name: string) {
         for (let t of TaskList.task_lists) {
             if (t.name == name)
                 return true;
@@ -195,11 +201,12 @@ class TaskList {
         return false;
     }
 
-    public constructor (name: String) {
+    public constructor (name: string, proper_name: string) {
         if (!TaskList.tasks_handler)
             throw new Error("Tasks handler not assigned to TaskList");
 
         this.name = name;
+        this.proper_name = proper_name;
         this.sort_order = SortOrder.ASC;
         this.sort_by = SortBy.PRIORITY;
 
@@ -228,6 +235,11 @@ class TaskList {
         }
     }
 
+    public getName (): string { return this.name; }
+    public getProperName (): string { return this.proper_name; }
+    public getSortOrder (): SortOrder { return this.sort_order; }
+    public getSortBy (): SortBy { return this.sort_by; }
+
     public getTasks (): Array<Task> {
         return TaskList.tasks_handler.getTasks()
                 .filter(o => o.list_name == this.name)
@@ -252,43 +264,5 @@ class TaskList {
     }
 }
 
-const rootTaskHandler = new TasksHandler();
-
-TaskList.tasks_handler = rootTaskHandler;
-const todo_task_list = new TaskList('todo');
-const progress_task_list = new TaskList('progress');
-const done_task_list = new TaskList('done');
-
-rootTaskHandler.addTask('todo', {
-    title: "Title 1",
-    end_date: new Date(),
-    priority: TaskPriority.HIGH,
-    checked: false
-});
-
-rootTaskHandler.addTask('todo', {
-    title: "Title 2",
-    end_date: new Date(),
-    priority: TaskPriority.HIGH,
-    checked: false
-});
-
-rootTaskHandler.addTask('todo', {
-    title: "Title 3",
-    end_date: new Date(),
-    priority: TaskPriority.LOW,
-    checked: false
-});
-
-rootTaskHandler.addTask('progress', {
-    title: "Title 4",
-    end_date: new Date(),
-    priority: TaskPriority.MEDIUM,
-    checked: false
-});
-
-console.log("Tasks: ");
-console.dir(todo_task_list.getTasks());
-
-console.log("Root Tasks: ");
-console.dir(rootTaskHandler.getTasks());
+export const RootTaskHandler = new TasksHandler();
+TaskList.tasks_handler = RootTaskHandler;
