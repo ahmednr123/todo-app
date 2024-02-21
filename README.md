@@ -20,4 +20,4 @@ View it live here: [Netlify](https://noor-todo-app.netlify.app)
 
 ![Moving Tasks](screenshots/moving.png)
 
-![Popup](screenshots/popup.png)
+![Popup](screenshots/popup-2.png)
